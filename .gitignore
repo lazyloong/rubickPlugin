@@ -1,0 +1,23 @@
+# 日志文件
+logs
+*.log
+npm-debug.log*
+# 依赖目录
+node_modules/
+pnp.cjs
+# 覆盖率报告目录
+coverage
+tmp
+# 构建输出目录
+dist
+lib
+# pnpm 锁文件（通常建议提交）
+package-lock.json
+# IDE 配置文件
+vscode/
+idea/
+# 临时缓存文件
+jest-cache
+verdaccio-cache
+turbo
+.turbo

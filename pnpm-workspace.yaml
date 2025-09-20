@@ -1,0 +1,8 @@
+packages:
+  # 所有插件包
+  - 'plugins/**'
+  # 共享代码
+  - 'shared/**'
+  # 可以排除某些目录
+  - '!plugins/**/node_modules'
+  - '!shared/**/node_modules'
