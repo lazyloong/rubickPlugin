@@ -1,0 +1,32 @@
+{
+  "name": "vsc",
+  "pluginName": "vsc",
+  "version": "0.0.1",
+  "description": "这是一个Rubick插件",
+  "main": "index.html",
+  "preload": "preload.js",
+  "logo": "https://pic1.zhimg.com/80/v2-c4b9ea27fde09f7e985a5fc77d922680_720w.png",
+  "pluginType": "ui",
+  "features": [
+    {
+      "code": "main",
+      "explain": "打开VSCode",
+      "cmds": [
+        "vsc",
+        "vscode"
+      ]
+    },
+    {
+      "code": "setting",
+      "explain": "设置插件",
+      "cmds": [
+        "设置",
+        "setting"
+      ]
+    }
+  ],
+  "author": "lazyloong",
+  "license": "ISC",
+  "development": "http://localhost:4001",
+  "homePage": "https://gitee.com/rubick-center/rubick-plugin-demo/raw/master/README.md"
+}
