@@ -5,6 +5,7 @@ interface Setting {
   vsc: {
     configPath: string;
     executorPath: string;
+    stars: string[];
   };
 }
 
@@ -12,6 +13,7 @@ const DEFAULT_SETTING: Setting = {
   vsc: {
     configPath: '',
     executorPath: '',
+    stars: [],
   },
 };
 

@@ -1,21 +1,14 @@
 <template lang="html">
   <div class="settings-container">
-    <el-tabs tab-position="left">
-      <el-tab-pane label="VSC">
-        <el-input
-          v-model="configPath"
-          placeholder="请输入配置项路径"
-          @change="changeConfigPath"
-        ></el-input>
-        <el-input
-          v-model="executorPath"
-          placeholder="请输入可执行文件路径"
-          @change="changeExecutorPath"
-        ></el-input>
-      </el-tab-pane>
-      <!-- 预留其他软件配置tab -->
-      <el-tab-pane label="其他软件" disabled>
-        <div class="coming-soon">敬请期待</div>
+    <el-tabs tab-position="left" v-model="activeTab">
+      <el-tab-pane v-for="tab in tabs" :key="tab.name" :name="tab.name" :disabled="tab.disabled">
+        <template #label>
+          <span class="custom-tab-label">
+            <img v-if="tab.icon" :src="tab.icon" class="tab-icon" />
+            {{ tab.label }}
+          </span>
+        </template>
+        <component :is="tab.component" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -23,25 +16,33 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import VsCodeSetting from './VsCodeSetting.vue';
+import vscodeIcon from '@/assets/vscode.svg';
 
 export default defineComponent({
-  mounted() {
-    this.configPath = this.$s.get('vsc.configPath') ?? '';
-    this.executorPath = this.$s.get('vsc.executorPath') ?? '';
+  name: 'SettingView',
+  components: {
+    VsCodeSetting,
   },
   data() {
     return {
-      configPath: '',
-      executorPath: '',
+      activeTab: 'vsc',
+      tabs: [
+        {
+          name: 'vsc',
+          label: 'Visual Studio Code',
+          icon: vscodeIcon,
+          component: 'VsCodeSetting',
+          disabled: false,
+        },
+        {
+          name: 'other',
+          label: '其他软件',
+          component: 'div',
+          disabled: true,
+        },
+      ],
     };
-  },
-  methods: {
-    changeConfigPath() {
-      this.$s.set('vsc.configPath', this.configPath);
-    },
-    changeExecutorPath() {
-      this.$s.set('vsc.executorPath', this.executorPath);
-    },
   },
 });
 </script>
@@ -49,20 +50,44 @@ export default defineComponent({
 <style lang="less">
 .settings-container {
   padding: 20px;
-  
+
   .el-tabs {
     height: 100%;
-    
+
     .el-tab-pane {
-      padding: 0 20px;
+      padding: 20px;
     }
-    
+
+    .el-tabs__item {
+      padding: 0 20px 0 0;
+    }
+
     .coming-soon {
       color: #999;
       text-align: center;
       margin-top: 50px;
     }
+
+    .el-form {
+      max-width: 800px;
+    }
+
+    .form-tip {
+      color: #999;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .custom-tab-label {
+      display: flex;
+      align-items: center;
+
+      .tab-icon {
+        width: 22px;
+        height: 22px;
+        margin-right: 8px;
+      }
+    }
   }
 }
 </style>
-<style lang="less"></style>

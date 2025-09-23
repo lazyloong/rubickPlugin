@@ -6,7 +6,7 @@ type Entry = {
   entries: { folderUri: string }[];
 };
 
-export default async function getProjects(): Promise<string[]> {
+export default async function getProjects(): Promise<{name: string, path: string}[]> {
   const vscDbPath = settingStore.get('vsc.configPath');
   if (vscDbPath === '') return [];
   const result = (await queryFromSqlite(
@@ -15,7 +15,11 @@ export default async function getProjects(): Promise<string[]> {
   )) as Result;
   if (!result?.[0]?.result) return [];
   const { entries } = JSON.parse(result[0].result) as Entry;
-  let projects = entries.map((entry) => decodeURIComponent(entry.folderUri).slice(8)); // remove file:///
-  projects = projects.filter((project) => project.length > 1);
+  let projects = entries.map((entry) => {
+    const path = decodeURIComponent(entry.folderUri).slice(8); // remove file:///
+    const name = path.split(/[\\/]/).pop() || path;
+    return {name, path};
+  });
+  projects = projects.filter((project) => project.path.length > 1);
   return projects;
 }

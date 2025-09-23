@@ -5,13 +5,13 @@ import vue from '@vitejs/plugin-vue';
 import AutoImport from 'unplugin-auto-import/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import Components from 'unplugin-vue-components/vite';
-import { defineConfig, PluginOption } from 'vite';
+import { defineConfig } from 'vite';
 
-const copyFiles = (): PluginOption => {
+const copyFiles = () => {
   return {
     name: 'copy-files',
     closeBundle: async () => {
-      const filesToCopy = ['preload.js', 'package.json', 'sql-wasm.wasm'];
+      const filesToCopy = ['preload.js', 'package.json'];
       for (const file of filesToCopy) {
         try {
           await fs.copyFile(
@@ -41,6 +41,8 @@ export default defineConfig({
     copyFiles(),
     AutoImport({
       resolvers: [ElementPlusResolver()],
+      imports: ['vue', 'vue-router'],
+      dts: true,
     }),
     Components({
       resolvers: [ElementPlusResolver()],

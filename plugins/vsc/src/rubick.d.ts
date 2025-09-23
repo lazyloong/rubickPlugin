@@ -79,6 +79,24 @@ interface BrowserWindowCreateOptions {
   };
 }
 
+type AppPathName =
+  | 'home'
+  | 'appData'
+  | 'userData'
+  | 'sessionData'
+  | 'temp'
+  | 'exe'
+  | 'module'
+  | 'desktop'
+  | 'documents'
+  | 'downloads'
+  | 'music'
+  | 'pictures'
+  | 'videos'
+  | 'logs'
+  | 'crashDumps'
+  | 'recent';
+
 /** Electron BrowserWindow 简化类型（Rubick暴露的核心方法） */
 interface RubickBrowserWindow {
   loadURL(url: string): void;
@@ -151,7 +169,7 @@ interface Rubick {
   /** 显示Rubick主窗口 */
   showMainWindow(): void;
   /** 显示文件选择对话框 */
-  showOpenDialog(options: OpenDialogOptions): string[] | undefined;
+  showOpenDialog(options: OpenDialogOptions = {}): string[] | undefined;
   /** 显示文件保存对话框 */
   showSaveDialog(options: SaveDialogOptions): string | undefined;
   /** 设置插件扩展区域高度（返回操作结果） */
@@ -169,7 +187,7 @@ interface Rubick {
   /** 子输入框失焦 */
   subInputBlur(): void;
   /** 获取系统路径（如userData、desktop等，对齐Electron AppPath） */
-  getPath(name: keyof Electron.AppPathName): string;
+  getPath(name: AppPathName): string;
   /** 显示系统通知（clickFeatureCode为点击后触发的功能标识） */
   showNotification(body: string, clickFeatureCode?: string): void;
 

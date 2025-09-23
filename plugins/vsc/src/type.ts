@@ -73,7 +73,8 @@ type PathImpl<T, Key extends keyof T> = Key extends string
         TupleArrayPaths<T[Key], Key>
       : IsArray<T[Key]> extends true
         ? // 处理普通数组情况
-          | `${Key}[${number}]`
+          | Key
+            | `${Key}[${number}]`
             | (IsValidObject<ArrayElement<T[Key]>> extends true
                 ? `${Key}[${number}].${Paths<ArrayElement<T[Key]>>}`
                 : never)

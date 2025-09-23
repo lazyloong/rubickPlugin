@@ -9,6 +9,8 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "allowJs": true,
+    "checkJs": false,
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true,
     "declaration": true,

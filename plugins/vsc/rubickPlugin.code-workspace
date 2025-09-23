@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "✨ rubick-plugin-monorepo",
+			"path": "../.."
+		},
+		{
+			"name": "vsc",
+			"path": "."
+		}
+	],
+	"settings": {}
+}

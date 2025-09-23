@@ -1,7 +1,7 @@
-import sqlInit, { Database, Statement } from 'sql.js';
+import sqlInit, { Database, SqlJsStatic, Statement } from './sql.js';
 import fs from '../node/fs';
 
-let SQL: sqlInit.SqlJsStatic;
+let SQL: SqlJsStatic;
 
 export const queryFromSqlite: (
   databaseFilePath: string,

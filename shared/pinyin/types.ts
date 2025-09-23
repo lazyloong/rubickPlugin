@@ -1,15 +1,15 @@
-import { Pinyin } from './pinyin';
+import Pinyin from './pinyin';
 
-type MatchData<T> = {
+type MatchData<T extends Item> = {
   item: T;
   score: number;
   range: Array<[number, number]>;
 };
 
-type Item = {
+type Item<T extends any = any> = {
   name: string;
   pinyin: Pinyin;
-  data: any;
+  data: T;
 };
 
-export type { Item, MatchData, Pinyin };
+export type { Item, MatchData };

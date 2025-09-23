@@ -1,7 +1,7 @@
 import SimplifiedDict from './dict/simplified_dict';
 import { Item, MatchData } from './types';
 
-export class Pinyin extends Array<PinyinChild> {
+export default class Pinyin extends Array<PinyinChild> {
   text: string;
   constructor(query: string) {
     super();
