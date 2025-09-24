@@ -6,7 +6,7 @@ import { dirname, join } from 'node:path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-/* ---------- 以下和原来完全一样 ---------- */
+/* ---------- 配置区 ---------- */
 const mods = [
   'fs',
   'path',
@@ -20,9 +20,9 @@ const mods = [
   'readline',
   'child_process',
   'cluster',
-] as const;
+];
 
-const topExports: Record<string, string[]> = {
+const topExports = {
   fs: [
     'readFile',
     'readFileSync',
@@ -44,16 +44,22 @@ const topExports: Record<string, string[]> = {
   cluster: ['fork', 'isMaster', 'isWorker', 'workers'],
 };
 
-function tpl(mod: string) {
+/* ---------- 模板函数 ---------- */
+function tpl(mod) {
   const members = topExports[mod] ?? [];
-  const named = members.length ? `export const { ${members.join(', ')} } = mod;` : '';
+  // 显式类型导出，避免 any
+  const named = members.map((m) => `export const ${m}: typeof Mod.${m} = mod.${m};`).join('\n');
+
   return `import type * as Mod from 'node:${mod}';
-const mod = (globalThis as any).require('${mod}') as typeof Mod;
+
+const mod = globalThis.require('${mod}') as typeof Mod;
+
 ${named}
 export default mod;
 `;
 }
 
+/* ---------- 生成文件 ---------- */
 const outDir = join(__dirname, '../shared/node');
 mkdirSync(outDir, { recursive: true });
 
@@ -64,4 +70,4 @@ for (const m of mods) {
 const indexLines = mods.map((m) => `export * as ${m} from './${m}';`).join('\n');
 writeFileSync(join(outDir, 'index.ts'), indexLines + '\n');
 
-console.log('✅ mynode 模块生成完毕！');
+console.log('✅ 带类型的动态 node 模块生成完毕！');

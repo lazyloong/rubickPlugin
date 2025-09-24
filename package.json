@@ -13,6 +13,7 @@
     "test": "turbo run test",
     "lint": "turbo run lint",
     "new": "node scripts/create-plugin.js",
+    "node": "node scripts/gen-mynode.js",
     "format:check": "prettier --check .",
     "format:fix": "prettier --write ."
   },
@@ -34,10 +35,9 @@
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-vue": "^10.4.0",
-    "globals": "^16.4.0",
     "less": "^4.4.1",
     "prettier": "^3.6.2",
-    "rubick-plugin-cli": "^1.0.3",
+    "rollup-plugin-livereload": "^2.0.5",
     "turbo": "^2.5.6",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.44.0",
@@ -48,15 +48,14 @@
     "vue-eslint-parser": "^10.2.0"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.3.2",
     "@iarna/toml": "^2.2.5",
     "element-plus": "^2.11.3",
     "fast-xml-parser": "^5.2.5",
     "ini": "^5.0.0",
     "lodash-es": "^4.17.21",
-    "sql.js": "^1.13.0",
     "vue": "^3.5.21",
     "vue-router": "^4.5.1",
-    "vue3-seamless-scroll": "^3.0.2",
     "yaml": "^2.8.1"
   }
 }

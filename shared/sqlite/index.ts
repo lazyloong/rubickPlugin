@@ -1,3 +1,3 @@
-import { queryFromSqlite } from './queryFromSqlite';
+import queryFromSqlite from './queryFromSqlite';
 
 export { queryFromSqlite };

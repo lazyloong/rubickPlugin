@@ -1,7 +1,7 @@
 import sqlWasmSource from './sql-wasm.js?raw';
 import wasmUrl from './sql-wasm.wasm?url';
 
-const initSqlJs: any = (() => {
+const initSqlJs: typeof import('sql.js') = (() => {
   const module: any = { exports: {} };
   const fn = new Function('module', 'exports', sqlWasmSource);
   fn(module, module.exports);

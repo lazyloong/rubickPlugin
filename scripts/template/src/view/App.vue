@@ -21,7 +21,15 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
+html,
 body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
   margin: 0;
+}
+
+#app {
+  height: 100%;
 }
 </style>

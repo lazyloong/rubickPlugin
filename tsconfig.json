@@ -31,7 +31,8 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
     "types": [
-      "element-plus/global"
+      "element-plus/global",
+      "@element-plus/icons-vue/dist/types/global.d.ts"
     ]
   },
   "references": []

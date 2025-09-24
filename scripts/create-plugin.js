@@ -23,9 +23,11 @@ function copyTemplate(pluginName, pluginDir) {
   cpSync(templateDir, pluginDir, { recursive: true });
 
   // Process all files and replace placeholders
-  const files = [join(pluginDir, 'package.json'), join(pluginDir, 'src/index.ts')];
+  const files = ['package.json', 'public/package.json'];
 
   files.forEach((filePath) => {
+    filePath = join(pluginDir, filePath);
+    console.log(filePath);
     let content = readFileSync(filePath, 'utf8');
     content = content.replace(/{{name}}/g, pluginName);
     content = content.replace(/{{camelCaseName}}/g, camelCaseName);
@@ -40,7 +42,7 @@ function createPlugin() {
       process.exit(1);
     }
 
-    const pluginDir = join('plugins', pluginName);
+    const pluginDir = join(__dirname, '..', 'plugins', pluginName);
 
     if (existsSync(pluginDir)) {
       console.error(`Plugin directory ${pluginDir} already exists.`);

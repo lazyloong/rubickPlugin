@@ -11,7 +11,7 @@ const copyFiles = (): PluginOption => {
   return {
     name: 'copy-files',
     closeBundle: async () => {
-      const filesToCopy = ['preload.js', 'package.json', 'sql-wasm.wasm'];
+      const filesToCopy = ['preload.js', 'package.json'];
       for (const file of filesToCopy) {
         try {
           await fs.copyFile(
