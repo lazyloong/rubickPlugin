@@ -15,19 +15,23 @@
         :ctrlIndex="getCtrlIndex(index)"
         :name="project.name"
         :path="project.path"
+        :index="index"
         :active="activeIndex === index"
+        :isStarred="stars.includes(project.path)"
         :class="{ active: activeIndex === index }"
-        @click="handleItemClick(index)"
+        @open="openProject(index)"
+        @toggleStar="toggleStar(project.path)"
       />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, toRaw } from 'vue';
 import { PinyinIndex } from '@shared/pinyin';
 import getProjects from '@/utils/vscdb';
 import Item from './components/Item.vue';
+import { exec } from '@shared/node/child_process';
 
 // 每页可见的项目数量（根据你的实际布局调整）
 const VISIBLE_ITEMS_COUNT = 10;
@@ -63,6 +67,8 @@ export default defineComponent({
       loading: true,
       query: '',
       itemHeight: 40,
+      vscPath: this.$s.get('vsc.executorPath'),
+      stars: this.$s.get('vsc.stars') || [],
     };
   },
   computed: {
@@ -150,15 +156,21 @@ export default defineComponent({
       }
     },
 
-    clickItem(index: number) {
-      const item: HTMLElement = this.$el.querySelectorAll('.item')[index] as HTMLElement;
-      if (item) item.click();
+    openProject(index: number) {
+      exec(`"${this.vscPath}" "${this.currentProjects[index].path}"`);
+      setTimeout(() => {
+        getProjects().then((projects) => {
+          this.projects = projects;
+          this.currentProjects = projects;
+        });
+      }, 1000);
     },
-
-    handleItemClick(index: number) {
-      this.activeIndex = index;
+    toggleStar(path: string) {
+      this.stars = this.stars.includes(path)
+        ? this.stars.filter((star) => star !== path)
+        : [...this.stars, path];
+      this.$s.set('vsc.stars', toRaw(this.stars));
     },
-
     // 鼠标滚轮事件处理
     handleWheel(event: WheelEvent) {
       if (event.deltaY < 0) {
@@ -180,7 +192,7 @@ export default defineComponent({
 
       if (targetIndex < this.currentProjects.length) {
         this.activeIndex = targetIndex;
-        this.clickItem(targetIndex);
+        this.openProject(targetIndex);
       }
     },
     handleKeyDown(e: KeyboardEvent) {
@@ -222,7 +234,7 @@ export default defineComponent({
           break;
         case 'Enter':
           if (this.activeIndex >= 0) {
-            this.clickItem(this.activeIndex);
+            this.openProject(this.activeIndex);
           }
           break;
       }

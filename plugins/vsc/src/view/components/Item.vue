@@ -3,13 +3,13 @@
     class="item"
     :class="{ pathNoExist: !pathExist }"
     @click="handleClick"
-    @contextmenu.prevent="toggleStar"
+    @contextmenu.prevent="handleContextmenu"
   >
     <img src="@/assets/vscode.svg" class="icon" />
     <div class="text-container">
       <div class="name">
-        {{ name }}
         <el-rate class="star" v-if="isStarred" :max="1" size="small" disabled :model-value="1" />
+        {{ name }}
       </div>
       <div class="path">{{ path }}</div>
     </div>
@@ -22,28 +22,21 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import fs from '@shared/node/fs';
-import { exec } from '@shared/node/child_process';
 
 export default defineComponent({
   props: {
     name: { type: String, required: true },
     path: { type: String, required: true },
+    index: { type: Number, required: true },
     ctrlIndex: { type: Number, required: true },
     active: { type: Boolean, required: true },
+    isStarred: { type: Boolean, required: true },
   },
-  data() {
-    const stars = this.$s.get('vsc.stars') || [];
-    stars.includes(this.path);
-    return {
-      isStarred: stars.includes(this.path),
-    };
-  },
+  emits: ['open', 'toggleStar'],
+  data() {},
   computed: {
     pathExist() {
       return fs.existsSync(this.path);
-    },
-    vscPath() {
-      return this.$s.get('vsc.executorPath');
     },
     icon() {
       return rubick.getFileIcon(this.path);
@@ -52,18 +45,11 @@ export default defineComponent({
   methods: {
     handleClick() {
       if (!this.pathExist) return;
-      exec(`"${this.vscPath}" "${this.path}"`);
-      setTimeout(() => {
-        rubick.outPlugin();
-      }, 1000);
+      this.$emit('open', this.index);
     },
-    toggleStar() {
-      const stars = this.$s.get('vsc.stars') || [];
-      const newStars = this.isStarred
-        ? stars.filter((star) => star !== this.path)
-        : [...stars, this.path];
-      this.$s.set('vsc.stars', newStars);
-      this.isStarred = !this.isStarred;
+    handleContextmenu() {
+      if (!this.pathExist) return;
+      this.$emit('toggleStar');
     },
   },
 });
