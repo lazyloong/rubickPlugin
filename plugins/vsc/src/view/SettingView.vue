@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import VsCodeSetting from './VsCodeSetting.vue';
+import VsCodeSetting from './components/VsCodeSetting.vue';
 import vscodeIcon from '@/assets/vscode.svg';
 
 export default defineComponent({

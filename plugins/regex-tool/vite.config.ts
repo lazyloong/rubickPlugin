@@ -5,9 +5,31 @@ import vue from '@vitejs/plugin-vue';
 import AutoImport from 'unplugin-auto-import/vite';
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 import Components from 'unplugin-vue-components/vite';
-import { defineConfig } from 'vite';
+import livereload from 'rollup-plugin-livereload';
+import { defineConfig, PluginOption } from 'vite';
 
-const copyFiles = () => {
+const isDev = process.argv.includes('-w');
+
+const injectReloadScript = (): PluginOption => ({
+  name: 'inject-reload-script',
+  apply: 'build', // 只在 build 阶段运行
+  transformIndexHtml: isDev
+    ? (html) =>
+        html.replace(
+          '</body>',
+          `<!-- auto injected -->
+<script>
+  (function(){
+    const ws = new WebSocket('ws://localhost:35729');
+    ws.onmessage = e => { if (JSON.parse(e.data)?.command ==='reload') location.reload() };
+  })();
+</script>
+</body>`,
+        )
+    : undefined,
+});
+
+const copyFiles = (): PluginOption => {
   return {
     name: 'copy-files',
     closeBundle: async () => {
@@ -33,7 +55,6 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, 'src'),
       '@shared': path.resolve(__dirname, '../../shared'),
-      fs: path.resolve(__dirname, '../../shared/fs'),
     },
   },
   plugins: [
@@ -41,18 +62,23 @@ export default defineConfig({
     copyFiles(),
     AutoImport({
       resolvers: [ElementPlusResolver()],
-      imports: ['vue', 'vue-router'],
-      dts: true,
     }),
     Components({
       resolvers: [ElementPlusResolver()],
     }),
+    livereload({ watch: 'dist' }) as PluginOption,
+    injectReloadScript(),
   ],
   build: {
     outDir: '../dist',
     emptyOutDir: true,
     rollupOptions: {
       external: ['fs'], // 声明 fs 为外部依赖
+      output: {
+        entryFileNames: '[name].js', // 入口 → index.js
+        chunkFileNames: '[name].js', // 动态 import 产生的 chunk
+        assetFileNames: 'assets/[name].[ext]', // css、图片等
+      },
     },
   },
 });

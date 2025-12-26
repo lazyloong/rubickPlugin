@@ -134,8 +134,7 @@ export function processRules(name: string, rules: Array<{ type: string; params: 
     case: applyCaseRule,
     js: applyJsRule,
   };
-  for (const rule of rules) {
-    const { type, params } = rule;
+  for (const { type, params } of rules) {
     result = funcMap[type](result, params);
   }
 
@@ -143,13 +142,13 @@ export function processRules(name: string, rules: Array<{ type: string; params: 
 }
 
 export function processBatchRename(
-  files: { folder: string; name: string }[],
+  files: { folder: string; name: string; type: string }[],
   rules: Array<{ type: string; params: any }>,
-): Array<{ folder: string; oldName: string; newName: string }> {
-  const results = files.map(({ folder, name }) => {
+): Array<{ folder: string; oldName: string; newName: string; type: string }> {
+  const results = files.map(({ folder, name, type }) => {
     const oldName = name.split(/[\\/]/).slice(-1)[0];
     const newName = processRules(oldName, rules);
-    return { folder, oldName, newName };
+    return { folder, oldName, newName, type };
   });
   counterMap.clear();
   return results;

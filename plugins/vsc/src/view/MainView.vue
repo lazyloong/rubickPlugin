@@ -47,15 +47,14 @@ export default defineComponent({
     getProjects().then((projects) => {
       this.projects = projects;
       this.currentProjects = projects;
+      this.loading = false;
       // 初始化容器焦点和项目高度
       const list = this.$refs.listContainer as HTMLElement;
-      if (list) {
-        list.focus();
-        this.$nextTick(() => {
-          this.calculateItemHeight();
-        });
-      }
-      this.loading = false;
+      if (!list) return;
+      list.focus();
+      this.$nextTick(() => {
+        this.calculateItemHeight();
+      });
     });
   },
   data() {
@@ -157,6 +156,7 @@ export default defineComponent({
     },
 
     openProject(index: number) {
+      this.query = '';
       exec(`"${this.vscPath}" "${this.currentProjects[index].path}"`);
       setTimeout(() => {
         getProjects().then((projects) => {

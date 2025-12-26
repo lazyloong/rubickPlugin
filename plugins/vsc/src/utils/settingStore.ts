@@ -1,4 +1,4 @@
-import { Get, Paths } from '@/type';
+import { Get, Paths } from '@shared/types';
 import { get, isEqual, merge, set } from 'lodash-es';
 
 interface Setting {
@@ -18,9 +18,10 @@ const DEFAULT_SETTING: Setting = {
 };
 
 type SettingsPath = Paths<Setting>;
+type SettingValue<T extends SettingsPath> = Get<Setting, T>;
 type SettingCallback<T extends SettingsPath, V = void> = (
-  newValue: Get<Setting, T>,
-  oldValue: Get<Setting, T>,
+  newValue: SettingValue<T>,
+  oldValue: SettingValue<T>,
 ) => V;
 type Listeners = {
   [K in SettingsPath]?: Set<SettingCallback<K>>;
@@ -48,12 +49,12 @@ class SettingStore {
     rubick.dbStorage.setItem(SETTINGS_DOC_KEY, this.settings);
   }
 
-  get<T extends SettingsPath>(path: T): Get<Setting, T> {
-    return get(this.settings, path) as Get<Setting, T>;
+  get<T extends SettingsPath>(path: T): SettingValue<T> {
+    return get(this.settings, path) as SettingValue<T>;
   }
 
-  set<T extends SettingsPath>(path: T, newValue: Get<Setting, T>) {
-    const oldValue = get(this.settings, path);
+  set<T extends SettingsPath>(path: T, newValue: SettingValue<T>) {
+    const oldValue = get(this.settings, path) as SettingValue<T>;
     if (isEqual(oldValue, newValue)) {
       return;
     }
@@ -65,8 +66,8 @@ class SettingStore {
 
   private notify<T extends SettingsPath>(
     path: T,
-    newValue: Get<Setting, T>,
-    oldValue: Get<Setting, T>,
+    newValue: SettingValue<T>,
+    oldValue: SettingValue<T>,
   ) {
     try {
       this.isNotifying = true;
@@ -117,4 +118,4 @@ class SettingStore {
 }
 
 export default new SettingStore();
-export type { Setting, SettingsPath, SettingCallback, SettingStore };
+export type { Setting, SettingsPath, SettingValue, SettingCallback, SettingStore };
